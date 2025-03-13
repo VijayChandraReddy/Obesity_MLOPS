@@ -109,7 +109,7 @@ with mlflow.start_run():
     mlflow.log_artifact(__file__)
 
     mlflow.set_tags({'author': 'Vijay','model' : 'XGB'})
-    mlflow.sklearn.log_model(xgb_classifier , 'xgb_classifier')
+    mlflow.sklearn.load_model(xgb_classifier , 'xgb_classifier')
 
     # preds_test = clf.predict(X_test)  
 

@@ -79,8 +79,6 @@ best_params['objective'] = 'multi:softmax'
 best_params["device"] = "cuda"
 best_params["verbosity"] = 0
 
-mlflow.set_experiment('MLOPS_MLFLOW_EXP1')
-
 with mlflow.start_run():
     xgb_classifier =  XGBClassifier(**best_params)
     clf = Pipeline(steps=[('preprocessor', preprocessor),
@@ -107,9 +105,6 @@ with mlflow.start_run():
 
     mlflow.log_artifact('confusion_matrix.png')
     mlflow.log_artifact(__file__)
-
-    mlflow.set_tags({'author': 'Vijay','model' : 'XGB'})
-    mlflow.sklearn.log_model(xgb_classifier , 'xgb_classifier')
 
     # preds_test = clf.predict(X_test)  
 

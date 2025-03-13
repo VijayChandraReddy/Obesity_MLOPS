@@ -69,17 +69,15 @@ preprocessor = ColumnTransformer(
         ('cat', categorical_transformer, categorical_cols)
     ])
 
-best_params = {'grow_policy': 'depthwise', 'n_estimators': 100, 
+best_params = {'grow_policy': 'depthwise', 'n_estimators': 200, 
                'learning_rate': 0.050053726931263504, 'gamma': 0.5354391952653927, 
-               'subsample': 0.7060590452456204, 'colsample_bytree': 0.37939433412123275, 
-               'max_depth': 20, 'min_child_weight': 21, 'reg_lambda': 9.150224029846654e-08,
+               'subsample': 0.7060590452456204, 'colsample_bytree': 0.38939433412123275, 
+               'max_depth': 25, 'min_child_weight': 23, 'reg_lambda': 9.150224029846654e-08,
                'reg_alpha': 5.671063656994295e-08}
 best_params['booster'] = 'gbtree'
 best_params['objective'] = 'multi:softmax'
 best_params["device"] = "cuda"
 best_params["verbosity"] = 0
-
-mlflow.set_experiment('MLOPS_MLFLOW_EXP1')
 
 with mlflow.start_run():
     xgb_classifier =  XGBClassifier(**best_params)
@@ -107,9 +105,6 @@ with mlflow.start_run():
 
     mlflow.log_artifact('confusion_matrix.png')
     mlflow.log_artifact(__file__)
-
-    mlflow.set_tags({'author': 'Vijay','model' : 'XGB'})
-    mlflow.sklearn.log_model(xgb_classifier , 'xgb_classifier')
 
     # preds_test = clf.predict(X_test)  
 

@@ -19,7 +19,16 @@ from xgboost import XGBClassifier
 from category_encoders import OneHotEncoder, MEstimateEncoder
 import mlflow
 
-mlflow.set_tracking_uri("http://127.0.0.1:5000")
+
+
+import dagshub
+dagshub.init(repo_owner='VijayChandraReddy', repo_name='Obesity_MLOPS', mlflow=True)
+mlflow.set_tracking_uri("https://dagshub.com/VijayChandraReddy/Obesity_MLOPS.mlflow")
+import mlflow
+
+# with mlflow.start_run():
+#   mlflow.log_param('parameter name', 'value')
+#   mlflow.log_metric('metric name', 1)
 
 # Read the data
 X_full = pd.read_csv(r"D:\ASSIGNMENTS\kaggle\obease_data\train.csv")
@@ -69,18 +78,18 @@ preprocessor = ColumnTransformer(
         ('cat', categorical_transformer, categorical_cols)
     ])
 
-best_params = {'grow_policy': 'depthwise', 'n_estimators': 100, 
-               'learning_rate': 0.050053726931263504, 'gamma': 0.5354391952653927, 
-               'subsample': 0.7060590452456204, 'colsample_bytree': 0.37939433412123275, 
-               'max_depth': 20, 'min_child_weight': 21, 'reg_lambda': 9.150224029846654e-08,
+best_params = {'grow_policy': 'depthwise', 'n_estimators': 300, 
+               'learning_rate': 0.070053726931263504, 'gamma': 0.5354391952653927, 
+               'subsample': 0.5060590452456204, 'colsample_bytree': 0.38939433412123275, 
+               'max_depth': 29, 'min_child_weight': 21, 'reg_lambda': 9.150224029846654e-08,
                'reg_alpha': 5.671063656994295e-08}
 best_params['booster'] = 'gbtree'
 best_params['objective'] = 'multi:softmax'
 best_params["device"] = "cuda"
 best_params["verbosity"] = 0
 
-mlflow.set_experiment('MLOPS_MLFLOW_EXP1')
-
+mlflow.set_experiment('MLOPS_MLFLOW_EXP2')
+mlflow.autolog()
 with mlflow.start_run():
     xgb_classifier =  XGBClassifier(**best_params)
     clf = Pipeline(steps=[('preprocessor', preprocessor),
@@ -95,9 +104,9 @@ with mlflow.start_run():
 
     accuracy = accuracy_score(y_valid,preds)
      
-    mlflow.log_metric('accuracy_score',accuracy)
-    mlflow.log_metric('learning_rate',best_params['learning_rate'])
-    mlflow.log_metric('max_depth',best_params['max_depth'])
+    # mlflow.log_metric('accuracy_score',accuracy)
+    # mlflow.log_metric('learning_rate',best_params['learning_rate'])
+    # mlflow.log_metric('max_depth',best_params['max_depth'])
 
     print(accuracy)
     cm = confusion_matrix(y_valid,preds)
@@ -110,60 +119,3 @@ with mlflow.start_run():
 
     mlflow.set_tags({'author': 'Vijay','model' : 'XGB'})
     mlflow.sklearn.log_model(xgb_classifier , 'xgb_classifier')
-
-    # preds_test = clf.predict(X_test)  
-
-
-
-
-
-# # Build the Neural Network model
-# xgb_classifier =  XGBClassifier(**best_params)
-
-# # Bundle preprocessing and modeling code in a pipeline
-# clf = Pipeline(steps=[('preprocessor', preprocessor),
-                     
-#                       ('model', xgb_classifier)
-#                      ])
-
-# Preprocessing of training data, fit model 
-clf.fit(X_train, y_train)
-
-# Preprocessing of validation data, get predictions
-preds = clf.predict(X_valid)
-
-#print('MAE:', mean_absolute_error(y_valid, preds))
-
-print(accuracy_score(y_valid,preds))
-
-preds_test = clf.predict(X_test)  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Your code here
-
-# Assuming label_encoder is the LabelEncoder you used
-# inverse_transformed_predictions = label_encoder.inverse_transform(preds_test)
-
-# inverse_transformed_predictions
-# # Save test predictions to file
-# output = pd.DataFrame({'id': X_test['id'],
-#                        'NObeyesdad': inverse_transformed_predictions})
-# output.to_csv('submission.csv', index=False)
-

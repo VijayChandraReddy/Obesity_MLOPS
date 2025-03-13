@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/0449a1fe34724a68b00f0799660907d7/artifacts
+end_time: 1741755217275
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 0449a1fe34724a68b00f0799660907d7
+run_name: traveling-bird-89
+run_uuid: 0449a1fe34724a68b00f0799660907d7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1741755188008
+status: 3
+tags: []
+user_id: Vijay
